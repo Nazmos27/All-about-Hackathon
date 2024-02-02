@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  app:
+    image: node:18
+    container_name: demoapp
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    command: npm start
+    environment:
+      NODE_ENV: production
+
+  db:
+    image: sqlite:latest
+    container_name: demodb
+    volumes:
+      - ./data:/data
+    environment:
+      - SQLITE_DATABASE=bookStore.db
+
+volumes:
+  db-data:
