@@ -34,20 +34,7 @@ app.post('/quote', (req, res) => {
             status: 200,
             success: true,
         });
-        // db.run(sql, [movie, quote, character], (err) => {
-        //     if (err) {
-        //         console.error("Error inserting quote:", err);
-        //         return res.status(500).json({
-        //             success: false,
-        //             error: 'Failed to insert quote into the database',
-        //         });
-        //     }
-        //     console.log("Successful input", movie, quote, character);
-        //     res.status(201).json({
-        //         success: true,
-        //         message: 'Quote successfully added to the database',
-        //     });
-        // });
+        
         
     } catch (error) {
         return res.json({
