@@ -12,13 +12,13 @@ const createItem = (name, description, callback)  => {
 //READ
 
 const readItems = (callback) => {
-    const sql = `SELECT * FROM`
+    const sql = `SELECT * FROM items`
     db.all(sql,[],callback)
 }
 
 //UPDATE
 
-const updateItem =(name, id, description, callback) => {
+const updateItem =(id, name, description, callback) => {
     const sql = `UPDATE items SET name = ? , description = ? WHERE id = ?`;
     db.run(sql,[name, description, id],callback)
 }
