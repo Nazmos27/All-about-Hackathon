@@ -1,19 +1,55 @@
 const express = require('express')
 const {createItem, readItems, updateItem, deleteItem} = require('./crud')
 const app = express()
+const url = require('url')
+const db = require('./database')
+
 
 app.use(express.json())
 
 //Get api
 app.get('/items',(req,res) => {
-    readItems((err,rows) => {
-        if(err){
-            res.status(500).send(err.message)
+    try {
+        let sql = "SELECT * FROM items";
+        const queryObject = url.parse(req.url, true).query;
+        console.log(queryObject.name,queryObject.value);
+        const name = queryObject.name; // Extracting the query parameter name
+        const value = queryObject.value; // Extracting the query parameter value
+        if(name  && value){ 
+            sql += ` WHERE ${name} LIKE ?`; // Using parameterized query to prevent SQL injection
+            db.all(sql, [`%${value}%`], (err, rows) => {
+                if(err){
+                    // console.error("erro : ", err)
+                    return res.status(400).send(err.message);
+                }
+                if(rows.length < 1){
+                    return res.status(400).send("No such  item found!");
+                }
+                return res.status(200).json({
+                    status: 200,
+                    data: rows,
+                })
+            })
         }else{
-            res.status(200).json(rows)
+            readItems((err,rows) =>{
+                if(err){
+                    return res.status(500).send(err.message)
+                }else{
+                    res.status(200).json(rows)
+                }
+            })
         }
-    })
+    } catch (error) {
+        // console.error("Error handling request:", error);
+        return res.status(400).json({
+            status: 400,
+            success: false,
+            error: 'Bad Request',
+        });
+    }
 })
+
+
 
 //post api
 app.post('/items',(req,res) => {
